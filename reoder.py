@@ -39,8 +39,14 @@ def write_pages_to_file(pages,non_pagedata, order_file, output_file):
         if non_pagedata:
             out_file.write(non_pagedata)
 
+        cnt = 0
+
         with open(order_file, 'r', encoding = 'utf-8') as file:
             for line in file:
+                if cnt > len(pages) / 10:
+                    print(cnt)
+                    return
+                cnt = cnt + 1
                 striped_line = line.strip()
                 if int(striped_line) < len(pages):
                     out_file.write(pages[int(striped_line)]['content'])
@@ -57,6 +63,8 @@ if __name__ == "__main__":
     # Extract pages
     pages, non_pagedata = extract_pages(enwik9_file)
     print('total : ', len(pages), ' articles')
+
+
 
     # Reverse the order of pages and write them to the output file
     write_pages_to_file(pages, non_pagedata, order_file, output_file)
