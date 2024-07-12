@@ -169,7 +169,7 @@ void Compress(unsigned long long input_bytes, std::ifstream *is,
   FILE *progress = fopen("./progress.log", "w");
   unsigned long long percent = 1 + (input_bytes / 10000);
   ClearOutput();
-  size_t buffer_size = 100 * 1024 * 1024;
+  size_t buffer_size = 200 * 1024 * 1024;
   size_t bytes_remaining = (size_t)input_bytes;
   char *buffer = new char[buffer_size];
   is->read(buffer, std::min(bytes_remaining, buffer_size));
