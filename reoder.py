@@ -43,7 +43,7 @@ def write_pages_to_file(pages,non_pagedata, order_file, output_file):
 
         with open(order_file, 'r', encoding = 'utf-8') as file:
             for line in file:
-                if cnt > len(pages) / 1.6:
+                if cnt > len(pages) / 10:
                     print(cnt)
                     return
                 cnt = cnt + 1
