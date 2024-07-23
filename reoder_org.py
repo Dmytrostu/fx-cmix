@@ -43,7 +43,7 @@ def write_pages_to_file(pages,non_pagedata, order_file, output_file):
 
         with open(order_file, 'r', encoding = 'utf-8') as file:
             for line in file:
-                if cnt > len(pages) / 20:
+                if cnt > len(pages) / 10:
                     print(cnt)
                     return
                 cnt = cnt + 1
@@ -58,7 +58,7 @@ def write_pages_to_file(pages,non_pagedata, order_file, output_file):
 if __name__ == "__main__":
     enwik9_file = 'enwik9'
     output_file = 'modified_enwik9'
-    order_file = 'new_article_order'
+    order_file = 'new_article_order.txt'
 
     # Extract pages
     pages, non_pagedata = extract_pages(enwik9_file)
