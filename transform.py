@@ -1,5 +1,5 @@
 # Open the binary file for reading
-with open("modified_enwik9", 'rb') as f:
+with open("sorted_sentences_enwik9", 'rb') as f:
     enwik9 = f.read()
 print("File read")
 
@@ -32,6 +32,6 @@ for old, new in replacements.items():
     print(f"Replaced {old} with {new}")
 
 # Open the binary file for writing
-with open("a_org", 'wb') as f:
+with open("sorted_a", 'wb') as f:
     f.write(e)
 print("File written")
