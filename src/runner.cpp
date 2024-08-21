@@ -480,31 +480,31 @@ int main(int argc, char **argv)
     //    return 0;
     // DEBUG END
 
-    //    std::cout << "Uncompressing the dictionary and the file with the new order of articles" << std::endl;
+       std::cout << "Uncompressing the dictionary and the file with the new order of articles" << std::endl;
     // unpack a) cmix dictionary, b) new order of articles, c) actual cmix binary
     selfextract_comp();
 
-    //    std::cout << "Preparing enwik9 for reordering" << std::endl;
+       std::cout << "Preparing enwik9 for reordering" << std::endl;
     split4Comp(input_path.c_str());
 
     // change the order of articles in the input
-    //    std::cout << "Reordering enwik9 articles" << std::endl;
+       std::cout << "Reordering enwik9 articles" << std::endl;
     reorder();
 
     // remove all tags from enwik9
-    //    std::cout << "Transforming enwik9 tags" << std::endl;
+       std::cout << "Transforming enwik9 tags" << std::endl;
     transform();
 
     // apply phda9 preprocessor
-    //    std::cout << "Applying phda9 preprocessor to the reordered enwik9" << std::endl;
+       std::cout << "Applying phda9 preprocessor to the reordered enwik9" << std::endl;
     phda9_prepr();
 
     // merge all input parts after preprocessing
-    //    std::cout << "Merging all parts into one input file for cmix" << std::endl;
+       std::cout << "Merging all parts into one input file for cmix" << std::endl;
     cat(".main_phda9prepr", ".intro", "un1");
     cat("un1", ".coda", ".ready4cmix");
     // run compression
-    // std::cout << "Cmix compression..." << std::endl;
+    std::cout << "Cmix compression..." << std::endl;
     input_path = ".ready4cmix";
     dictionary = fopen(".dict", "rb");
     if (!RunCompression(enable_preprocess, input_path, temp_path, output_path,
