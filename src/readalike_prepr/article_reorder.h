@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <iostream>
+#include <sstream>
 
 #define NUM_OF_ARTICLES 243426
 //#include <algorithm>
@@ -83,11 +85,6 @@ void bubblesort(std::vector<Accumulator>& mylist)
 	    }
 	}
 }
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <string>
 
 struct Page {
     std::string content;
