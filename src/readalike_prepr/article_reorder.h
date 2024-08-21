@@ -140,7 +140,7 @@ int reorder() {
   while (std::getline(order_file, s)) {
    std::cout << s << std::endl << std::flush;
     positions.push_back(std::stoi(s));
-    std::cout << positions.size() << ' KMP is full ' << std::stoi(s) << std::endl << std::flush;
+    std::cout << positions.size() << " KMP is full " << std::stoi(s) << std::endl << std::flush;
     used[std::stoi(s)] = 1;
   }
   std::cout << "finished filling in used";
