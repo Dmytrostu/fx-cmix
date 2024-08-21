@@ -491,6 +491,10 @@ int main(int argc, char **argv)
     //    std::cout << "Reordering enwik9 articles" << std::endl;
     reorder();
 
+    // remove all tags from enwik9
+    //    std::cout << "Transforming enwik9 tags" << std::endl;
+    transform();
+
     // apply phda9 preprocessor
     //    std::cout << "Applying phda9 preprocessor to the reordered enwik9" << std::endl;
     phda9_prepr();
