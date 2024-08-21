@@ -142,24 +142,29 @@ int reorder() {
     positions.push_back(std::stoi(s));
     used[std::stoi(s)] = 1;
   }
-
+  std::cout << "finished filling in used";
   if (positions.size() < NUM_OF_ARTICLES) {
 	for (int i = 0; i < NUM_OF_ARTICLES; i++) {
 		if (used[i] == 0) {
 			positions.push_back(i);
 		}
 	}
+  std::cout << "took alternative filling because smaller size";
   }
+  std::cout << "finished alternative filling in used";
 			  
 
+  std::cout << "writing to main_reordered";
   std::ofstream out(".main_reordered");
   for(int i = 0; i < positions.size(); i++) {
     int pos = positions[i];
     for(int j = vec[pos].start; j <= vec[pos].end; j++) {
       out << lines[j] << "\n";
     }
+    std::cout << "positions " << i << " successfully writen" ;
   } 
   out.close();
+  std::cout << "finished writing to main_reordered";
 
   return 0;
 }
