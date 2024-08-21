@@ -83,102 +83,198 @@ void bubblesort(std::vector<Accumulator>& mylist)
 	    }
 	}
 }
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
 
-int reorder() {
-  line_count = 0;
+struct Page {
+    std::string content;
+    bool written;
+};
 
-  std::ifstream file(".main"); //file just has some sentences
- if (!file) {
-   std::cout << "unable to open file";
-   return -1;
- }
+void reorder() {
+    std::vector<Page> pages;
+    std::string non_pagedata;
+    std::string line;
+    bool page_content = false;
+    Page page_data;
 
-  std::ifstream order_file(".new_article_order"); //file just has some sentences
- if (!order_file) {
-   std::cout << "unable to open file";
-   return -1;
- }
+    // Extract pages
+    std::ifstream file(".main");
+    if (!file) {
+        std::cout << "Unable to open file: " << enwik9_file << std::endl;
+        return;
+    }
 
-  std::vector<std::string> lines;
-  std::vector<int> positions;
+    while (std::getline(file, line)) {
+        if (line.find("<page>") != std::string::npos) {
+            if (!page_content) {
+                page_data = {line, false}; // Start new page_data
+            } else {
+                pages.push_back(page_data);
+                page_data = {line, false}; // Start new page_data
+            }
+            page_content = true;
+        } else {
+            if (page_content) {
+                page_data.content += line; // Append to current page content
+            } else {
+                non_pagedata += line; // Accumulate non-page data
+            }
+        }
+    }
+    if (page_content) {
+        pages.push_back(page_data); // Add last page if exists
+    }
 
-  std::vector<std::string> patterns  = { "<page>", "<id>", "</page>" };
-  std::vector<ParserState>  transitions    = { expect_id, expect_pageend, expect_page };
-  int (*actions[3])(std::string)     = {action_get_line_count, action_get_id, action_get_line_count};
-  void (*save[3])(int, Accumulator*) = {save_pagestart, save_id, save_pageend};
+    // Write pages to output file
+    std::ofstream out_file(".main_reordered");
+    if (!out_file) {
+        std::cout << "Unable to open output file: " << output_file << std::endl;
+        return;
+    }
 
-  ParserState state = expect_page;
+    if (!non_pagedata.empty()) {
+        out_file << non_pagedata; // Write non-pagedata first
+    }
 
-  std::vector<Accumulator> vec;
+    std::vector<int> positions;
+    std::ifstream order_file_stream(".new_article_order");
+    if (!order_file_stream) {
+        std::cout << "Unable to open order file: " << order_file << std::endl;
+        return;
+    }
 
-  std::string s;
-  std::string pattern;
-  int res = 0;
-  Accumulator acc;
-  while (std::getline(file, s))
-  {
-    pattern = patterns[state];
-    if (s.find(pattern) != std::string::npos) {
-      res = actions[state](s);
-      save[state](res, &acc);
-      state = transitions[state];
-      if (state == expect_page)
-        vec.push_back(acc);
-    } 
-    line_count++;
-    lines.push_back(s);
-  }
+    std::vector<bool> used(pages.size(), false);
+    while (std::getline(order_file_stream, line)) {
+        int position = std::stoi(line);
+        if (position < pages.size()) {
+            if (!used[position]) {
+                positions.push_back(position);
+                used[position] = true; // Mark as used
+            } else {
+                std::cout << "Duplicate entry: " << position << std::endl;
+            }
+        } else {
+            std::cout << "Position out of bounds: " << position << std::endl;
+        }
+    }
 
- std::cout << line_count  << std::endl;
+    // Fill in unused positions if necessary
+    if (positions.size() < pages.size()) {
+        for (int i = 0; i < pages.size(); i++) {
+            if (!used[i]) {
+                positions.push_back(i);
+            }
+        }
+    }
 
- for(std::vector<Accumulator>::const_iterator it = vec.begin();
-   it != vec.end(); ++it) {
-   std::cout << it->id << " " << it->start << " " << it->end << std::endl;
- }
+    // Write pages in the specified order
+    for (int pos : positions) {
+        out_file << pages[pos].content << "\n"; // Write each page content
+    }
 
-  std::vector<int> used(NUM_OF_ARTICLES, 0);
-  while (std::getline(order_file, s)) {
-   std::cout << s << std::endl << std::flush;
-    positions.push_back(std::stoi(s));
-    std::cout << "used " << used.size() << " Position " << positions.size() << " KMP is full " << std::stoi(s) << std::endl << std::flush;
-    if(std::stoi(s) < used.size())
-      if(used[std::stoi(s)] == 0)
-        used[std::stoi(s)] = 1;
-      else
-        std::cout<< "KMP was really wooden head" << std::endl << std::flush;
-    else
-      std::cout<< "There is error here" << std::endl << std::flush;
-    std::cout << "Passed" << std::endl << std::flush;
-  }
-  std::cout << "finished filling in used" << std::endl << std::flush;
-  if (positions.size() < NUM_OF_ARTICLES) {
-    for (int i = 0; i < NUM_OF_ARTICLES; i++) {
-      if (used[i] == 0) {
-        positions.push_back(i);
-      }
-	}
-  std::cout << "took alternative filling because smaller size" << std::endl << std::flush;
-  }
-  std::cout << "finished alternative filling in used" << std::endl << std::flush;
+    out_file.close();
+    std::cout << "Finished writing to " << output_file << std::endl;
+}
+
+// int reorder() {
+//   line_count = 0;
+
+//   std::ifstream file(".main"); //file just has some sentences
+//  if (!file) {
+//    std::cout << "unable to open file";
+//    return -1;
+//  }
+
+//   std::ifstream order_file(".new_article_order"); //file just has some sentences
+//  if (!order_file) {
+//    std::cout << "unable to open file";
+//    return -1;
+//  }
+
+//   std::vector<std::string> lines;
+//   std::vector<int> positions;
+
+//   std::vector<std::string> patterns  = { "<page>", "<id>", "</page>" };
+//   std::vector<ParserState>  transitions    = { expect_id, expect_pageend, expect_page };
+//   int (*actions[3])(std::string)     = {action_get_line_count, action_get_id, action_get_line_count};
+//   void (*save[3])(int, Accumulator*) = {save_pagestart, save_id, save_pageend};
+
+//   ParserState state = expect_page;
+
+//   std::vector<Accumulator> vec;
+
+//   std::string s;
+//   std::string pattern;
+//   int res = 0;
+//   Accumulator acc;
+//   while (std::getline(file, s))
+//   {
+//     pattern = patterns[state];
+//     if (s.find(pattern) != std::string::npos) {
+//       res = actions[state](s);
+//       save[state](res, &acc);
+//       state = transitions[state];
+//       if (state == expect_page)
+//         vec.push_back(acc);
+//     } 
+//     line_count++;
+//     lines.push_back(s);
+//   }
+
+//  std::cout << line_count  << std::endl;
+
+//  for(std::vector<Accumulator>::const_iterator it = vec.begin();
+//    it != vec.end(); ++it) {
+//    std::cout << it->id << " " << it->start << " " << it->end << std::endl;
+//  }
+
+//   std::vector<int> used(NUM_OF_ARTICLES, 0);
+//   while (std::getline(order_file, s)) {
+//    std::cout << s << std::endl << std::flush;
+//     positions.push_back(std::stoi(s));
+//     std::cout << "used " << used.size() << " Position " << positions.size() << " KMP is full " << std::stoi(s) << std::endl << std::flush;
+//     if(std::stoi(s) < used.size())
+//       if(used[std::stoi(s)] == 0)
+//         used[std::stoi(s)] = 1;
+//       else
+//         std::cout<< "KMP was really wooden head" << std::endl << std::flush;
+//     else
+//       std::cout<< "There is error here" << std::endl << std::flush;
+//     std::cout << "Passed" << std::endl << std::flush;
+//   }
+//   std::cout << "finished filling in used" << std::endl << std::flush;
+//   if (positions.size() < NUM_OF_ARTICLES) {
+//     for (int i = 0; i < NUM_OF_ARTICLES; i++) {
+//       if (used[i] == 0) {
+//         positions.push_back(i);
+//       }
+// 	}
+//   std::cout << "took alternative filling because smaller size" << std::endl << std::flush;
+//   }
+//   std::cout << "finished alternative filling in used" << std::endl << std::flush;
 			  
 
-  std::cout << "writing to main_reordered" << std::endl << std::flush;
-  std::ofstream out(".main_reordered");
-  for(int i = 0; i < positions.size(); i++) {
-    std::cout << "positions " << i << " started" << std::endl << std::flush;
-    int pos = positions[i];
-    std::cout << "vec size " << vec.size() << " lines size " << lines.size() << std::endl << std::flush;
-    std::cout << " Id " << vec[pos].id << " Start " << vec[pos].start << " End " << vec[pos].end << std::endl << std::flush;
-    for(int j = vec[pos].start; j <= vec[pos].end; j++) {
-      out << lines[j] << "\n";
-    }
-    std::cout << "positions " << i << " successfully writen" << std::endl << std::flush;
-  } 
-  out.close();
-  std::cout << "finished writing to main_reordered" << std::endl << std::flush;
+//   std::cout << "writing to main_reordered" << std::endl << std::flush;
+//   std::ofstream out(".main_reordered");
+//   for(int i = 0; i < positions.size(); i++) {
+//     std::cout << "positions " << i << " started" << std::endl << std::flush;
+//     int pos = positions[i];
+//     std::cout << "vec size " << vec.size() << " lines size " << lines.size() << std::endl << std::flush;
+//     std::cout << " Id " << vec[pos].id << " Start " << vec[pos].start << " End " << vec[pos].end << std::endl << std::flush;
+//     for(int j = vec[pos].start; j <= vec[pos].end; j++) {
+//       out << lines[j] << "\n";
+//     }
+//     std::cout << "positions " << i << " successfully writen" << std::endl << std::flush;
+//   } 
+//   out.close();
+//   std::cout << "finished writing to main_reordered" << std::endl << std::flush;
 
-  return 0;
-}
+//   return 0;
+// }
 
 int transform() {
   std::ifstream input_file(".main_reordered", std::ios::binary);
