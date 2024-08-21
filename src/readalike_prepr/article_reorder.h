@@ -6,7 +6,7 @@
 #include <vector>
 #include <utility>
 
-#define NUM_OF_ARTICLES 243425
+#define NUM_OF_ARTICLES 243426
 //#include <algorithm>
 
 //#include <iostream>
