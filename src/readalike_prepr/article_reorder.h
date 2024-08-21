@@ -91,7 +91,7 @@ struct Page {
     bool written;
 };
 
-void reorder() {
+int reorder() {
     std::vector<Page> pages;
     std::string non_pagedata;
     std::string line;
@@ -101,7 +101,7 @@ void reorder() {
     // Extract pages
     std::ifstream file(".main");
     if (!file) {
-        std::cout << "Unable to open file: " << enwik9_file << std::endl;
+        std::cout << "Unable to open file: " << enwik9_file << std::endl << std::flush;
         return;
     }
 
@@ -129,7 +129,7 @@ void reorder() {
     // Write pages to output file
     std::ofstream out_file(".main_reordered");
     if (!out_file) {
-        std::cout << "Unable to open output file: " << output_file << std::endl;
+        std::cout << "Unable to open output file: " << output_file << std::endl << std::flush;
         return;
     }
 
@@ -140,7 +140,7 @@ void reorder() {
     std::vector<int> positions;
     std::ifstream order_file_stream(".new_article_order");
     if (!order_file_stream) {
-        std::cout << "Unable to open order file: " << order_file << std::endl;
+        std::cout << "Unable to open order file: " << order_file << std::endl << std::flush;
         return;
     }
 
@@ -152,10 +152,10 @@ void reorder() {
                 positions.push_back(position);
                 used[position] = true; // Mark as used
             } else {
-                std::cout << "Duplicate entry: " << position << std::endl;
+                std::cout << "Duplicate entry: " << position << std::endl << std::flush;
             }
         } else {
-            std::cout << "Position out of bounds: " << position << std::endl;
+            std::cout << "Position out of bounds: " << position << std::endl << std::flush;
         }
     }
 
@@ -174,7 +174,8 @@ void reorder() {
     }
 
     out_file.close();
-    std::cout << "Finished writing to " << output_file << std::endl;
+    std::cout << "Finished writing to " << output_file << std::endl << std::flush;
+    return 0;
 }
 
 // int reorder() {
