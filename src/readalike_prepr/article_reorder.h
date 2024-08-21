@@ -150,29 +150,29 @@ int reorder() {
       std::cout<< "There is error here" << std::endl << std::flush;
     std::cout << "Passed" << std::endl << std::flush;
   }
-  std::cout << "finished filling in used";
+  std::cout << "finished filling in used" << std::endl << std::flush;
   if (positions.size() < NUM_OF_ARTICLES) {
-	for (int i = 0; i < NUM_OF_ARTICLES; i++) {
-		if (used[i] == 0) {
-			positions.push_back(i);
-		}
+    for (int i = 0; i < NUM_OF_ARTICLES; i++) {
+      if (used[i] == 0) {
+        positions.push_back(i);
+      }
 	}
-  std::cout << "took alternative filling because smaller size";
+  std::cout << "took alternative filling because smaller size" << std::endl << std::flush;
   }
-  std::cout << "finished alternative filling in used";
+  std::cout << "finished alternative filling in used" << std::endl << std::flush;
 			  
 
-  std::cout << "writing to main_reordered";
+  std::cout << "writing to main_reordered" << std::endl << std::flush;
   std::ofstream out(".main_reordered");
   for(int i = 0; i < positions.size(); i++) {
     int pos = positions[i];
     for(int j = vec[pos].start; j <= vec[pos].end; j++) {
       out << lines[j] << "\n";
     }
-    std::cout << "positions " << i << " successfully writen" ;
+    std::cout << "positions " << i << " successfully writen" << std::endl << std::flush;
   } 
   out.close();
-  std::cout << "finished writing to main_reordered";
+  std::cout << "finished writing to main_reordered" << std::endl << std::flush;
 
   return 0;
 }
