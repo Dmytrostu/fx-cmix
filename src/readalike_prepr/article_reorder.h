@@ -102,7 +102,7 @@ int reorder() {
     std::ifstream file(".main");
     if (!file) {
         std::cout << "Unable to open file: " << ".main" << std::endl << std::flush;
-        return;
+        return -1;
     }
 
     while (std::getline(file, line)) {
@@ -130,7 +130,7 @@ int reorder() {
     std::ofstream out_file(".main_reordered");
     if (!out_file) {
         std::cout << "Unable to open output file: " << ".main_ordered" << std::endl << std::flush;
-        return;
+        return -1;
     }
 
     if (!non_pagedata.empty()) {
@@ -140,8 +140,8 @@ int reorder() {
     std::vector<int> positions;
     std::ifstream order_file_stream(".new_article_order");
     if (!order_file_stream) {
-        std::cout << "Unable to open order file: " << order_file << std::endl << std::flush;
-        return;
+        std::cout << "Unable to open order file: " << ".new_article_order" << std::endl << std::flush;
+        return -1;
     }
 
     std::vector<bool> used(pages.size(), false);
