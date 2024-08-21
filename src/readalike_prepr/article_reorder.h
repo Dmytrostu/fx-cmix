@@ -140,8 +140,15 @@ int reorder() {
   while (std::getline(order_file, s)) {
    std::cout << s << std::endl << std::flush;
     positions.push_back(std::stoi(s));
-    std::cout << positions.size() << " KMP is full " << std::stoi(s) << std::endl << std::flush;
-    used[std::stoi(s)] = 1;
+    std::cout << "used " << used.size() << " Position " << positions.size() << " KMP is full " << std::stoi(s) << std::endl << std::flush;
+    if(std::stoi(s) < used.size())
+      if(used[std::stoi(s)] == 0)
+        used[std::stoi(s)] = 1;
+      else
+        std::cout<< "KMP was really wooden head" << std::endl << std::flush;
+    else
+      std::cout<< "There is error here" << std::endl << std::flush;
+    std::cout << "Passed" << std::endl << std::flush;
   }
   std::cout << "finished filling in used";
   if (positions.size() < NUM_OF_ARTICLES) {
