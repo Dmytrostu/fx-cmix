@@ -165,7 +165,10 @@ int reorder() {
   std::cout << "writing to main_reordered" << std::endl << std::flush;
   std::ofstream out(".main_reordered");
   for(int i = 0; i < positions.size(); i++) {
+    std::cout << "positions " << i << " started" << std::endl << std::flush;
     int pos = positions[i];
+    std::cout << "vec size " << vec.size() << " lines size " << lines.size() << std::endl << std::flush;
+    std::cout << " Id " << vec[pos].id << " Start " << vec[pos].start << " End " << vec[pos].end << std::endl << std::flush;
     for(int j = vec[pos].start; j <= vec[pos].end; j++) {
       out << lines[j] << "\n";
     }
