@@ -336,37 +336,54 @@ int prepr4(char const *argv[]) {
 //
 int prepr5(char const* argv[])
 {
-  char s[16384];
-  FILE *sf, *t1;
-  int mi=0, tf=0;
-  sf = fopen(argv[0],"rb");
-  t1 = fopen(argv[1],"wb");
-//  if ( sf==0 || t1==0 )  printf("can't open file"), exit(1);
+    char s[16384];
+    FILE *sf, *t1;
+    int mi = 0, tf = 0;
 
-  while(1) {
-    fgets(s, 16384, sf);
-    char *p = strstr(s, "<text "), *w;
-    if (p)  { tf=1, p = strchr(p, '>'); assert(p);  if(p[-1]=='/') tf=0;  ++p; }
-    else  p = s;
-    if (strstr(s, "</text>"))  tf=0;
-    if (tf) {
-        for(w=p; *p!=0; ++p)  {
-          if (*p=='"' || *p=='<' || *p=='>')  { assert(p[-1]=='&');  --w; }
-          *w++=*p;
-        }
-        *w = 0;
+    sf = fopen(argv[1], "rb"); // Corrected argv index for file input
+    t1 = fopen(argv[2], "wb"); // Corrected argv index for file output
+    if (sf == nullptr || t1 == nullptr) {
+        printf("can't open file");
+        return 1;
     }
-    fputs(s, t1);
-    ++mi;
-    if (feof(sf))  break;
-  }
 
-  fclose(t1);
-  fclose(sf);
+    while (1) {
+        fgets(s, sizeof(s), sf);
+        char *p = strstr(s, "<text "), *w;
+        if (p) {
+            tf = 1;
+            p = strchr(p, '>');
+            assert(p);
+            if (p[-1] == '/') tf = 0;
+            ++p;
+        } else {
+            p = s;
+        }
 
-  //printf("\n%d lines moved to %s\n", mi, argv[2]);
+        if (strstr(s, "</text>")) tf = 0;
 
-  return 0;
+        if (tf) {
+            for (w = p; *p != 0; ++p) {
+                if (*p == '"' || *p == '<' || *p == '>') {
+                    // Ensure p is not at the start of the string before checking p[-1]
+                    assert(p > s && p[-1] == '&'); 
+                    --w;
+                }
+                *w++ = *p;
+            }
+            *w = 0;
+        }
+        fputs(s, t1);
+        ++mi;
+        if (feof(sf)) break;
+    }
+
+    fclose(t1);
+    fclose(sf);
+
+    // printf("\n%d lines moved to %s\n", mi, argv[2]);
+
+    return 0;
 }
 
 
