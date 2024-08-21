@@ -88,16 +88,16 @@ int reorder() {
   line_count = 0;
 
   std::ifstream file(".main"); //file just has some sentences
-//  if (!file) {
-//    std::cout << "unable to open file";
-//    return -1;
-//  }
+ if (!file) {
+   std::cout << "unable to open file";
+   return -1;
+ }
 
   std::ifstream order_file(".new_article_order"); //file just has some sentences
-//  if (!order_file) {
-//    std::cout << "unable to open file";
-//    return -1;
-//  }
+ if (!order_file) {
+   std::cout << "unable to open file";
+   return -1;
+ }
 
   std::vector<std::string> lines;
   std::vector<int> positions;
@@ -129,16 +129,16 @@ int reorder() {
     lines.push_back(s);
   }
 
-//  std::cout << line_count  << std::endl;
+ std::cout << line_count  << std::endl;
 
-//  for(std::vector<Accumulator>::const_iterator it = vec.begin();
-//    it != vec.end(); ++it) {
-//    std::cout << it->id << " " << it->start << " " << it->end << std::endl;
-//  }
+ for(std::vector<Accumulator>::const_iterator it = vec.begin();
+   it != vec.end(); ++it) {
+   std::cout << it->id << " " << it->start << " " << it->end << std::endl;
+ }
 
   std::vector<int> used(NUM_OF_ARTICLES, 0);
   while (std::getline(order_file, s)) {
-//    std::cout << s << std::endl << std::flush;
+   std::cout << s << std::endl << std::flush;
     positions.push_back(std::stoi(s));
     used[std::stoi(s)] = 1;
   }
