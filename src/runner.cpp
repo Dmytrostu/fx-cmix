@@ -604,6 +604,10 @@ void debugAllPrepare(std::string input_path, std::string output_path)
   reorder();
   //   std::cout << __LINE__ << std::endl << std::flush;
 
+  // remove all tags and replace them by special chars
+  transform();
+  //   std::cout << __LINE__ << std::endl << std::flush;
+
   // apply phda9 preprocessor
   phda9_prepr();
   //    std::cout << __LINE__ << std::endl << std::flush;

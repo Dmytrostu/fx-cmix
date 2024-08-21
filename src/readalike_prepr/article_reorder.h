@@ -164,6 +164,62 @@ int reorder() {
   return 0;
 }
 
+int transform() {
+  std::ifstream input_file(".main_reordered", std::ios::binary);
+    if (!input_file) {
+        std::cout << "Unable to open input file" << std::endl;
+        return -1;
+    }
+
+    std::vector<char> buffer((std::istreambuf_iterator<char>(input_file)), std::istreambuf_iterator<char>());
+    input_file.close();
+    std::cout << "Transformed File read" << std::endl;
+
+    // Create a dictionary of replacements
+    std::unordered_map<std::string, std::string> replacements = {
+        {"<page>", ""},
+        {"</page>", ""},
+        {"<title>", ""},
+        {"</title>", ""},
+        {"<id>", ""},
+        {"</id>", ""},
+        {"<ip>", ""},
+        {"</ip>", ""},
+        {"<revision>", ""},
+        {"</revision>", ""},
+        {"<timestamp>", ""},
+        {"</timestamp>", ""},
+        {"<contributor>", ""},
+        {"</contributor>", ""},
+        {"<username>", ""},
+        {"</username>", ""},
+        {"<comment>", ""},
+        {"</comment>", ""}
+    };
+
+    // Perform the replacements
+    std::string content(buffer.begin(), buffer.end());
+    for (const auto& [old, new_str] : replacements) {
+        size_t pos = 0;
+        while ((pos = content.find(old, pos)) != std::string::npos) {
+            content.replace(pos, old.length(), new_str);
+            std::cout << "Replaced " << old << " with " << new_str << std::endl;
+            pos += new_str.length();
+        }
+    }
+
+    // Open the binary file for writing
+    std::ofstream output_file(".main_reordered", std::ios::binary);
+    if (!output_file) {
+        std::cout << "Unable to open output file" << std::endl;
+        return -1;
+    }
+    output_file.write(content.c_str(), content.size());
+    output_file.close();
+    std::cout << "Transformed File written" << std::endl;
+
+    return 0;
+}
 
 int sort() {
   line_count = 0;
