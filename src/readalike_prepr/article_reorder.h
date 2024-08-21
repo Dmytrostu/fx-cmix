@@ -101,7 +101,7 @@ int reorder() {
     // Extract pages
     std::ifstream file(".main");
     if (!file) {
-        std::cout << "Unable to open file: " << enwik9_file << std::endl << std::flush;
+        std::cout << "Unable to open file: " << ".main" << std::endl << std::flush;
         return;
     }
 
@@ -129,7 +129,7 @@ int reorder() {
     // Write pages to output file
     std::ofstream out_file(".main_reordered");
     if (!out_file) {
-        std::cout << "Unable to open output file: " << output_file << std::endl << std::flush;
+        std::cout << "Unable to open output file: " << ".main_ordered" << std::endl << std::flush;
         return;
     }
 
@@ -174,7 +174,7 @@ int reorder() {
     }
 
     out_file.close();
-    std::cout << "Finished writing to " << output_file << std::endl << std::flush;
+    std::cout << "Finished writing to " << ".main_ordered" << std::endl << std::flush;
     return 0;
 }
 
