@@ -30,7 +30,9 @@ int prepr1(char const* argv[]) {
   int c, i = 0, mi = 0, lnu = 0, j = 0, f = 0, b1 = 0, lc = 0;
   sf = fopen(argv[0], "rb");
   t1 = fopen(argv[1], "wb");
+  std::cout << "opening argv[1]" << std::endl << std::flush;
   t2 = fopen(argv[2], "wb");
+  std::cout << "opening argv[2]" << std::endl << std::flush;
 //  if (sf == 0 || t1 == 0 || t2 == 0) {
 //    printf("can't open file"), exit(1);
 //  }
@@ -124,7 +126,9 @@ int prepr2(char const *argv[]) {
   int i, line_length, f = 0, lastID = 0;
   sf = fopen(argv[0], "rb");
   t1 = fopen(argv[1], "wb");
+  std::cout << "opening argv[1]" << std::endl << std::flush;
   t2 = fopen(argv[2], "wb");
+  std::cout << "opening argv[2]" << std::endl << std::flush;
 //  if (sf == 0 || t1 == 0 || t2 == 0) {
 //    printf("can't open file"), exit(1);
 //  }
@@ -204,6 +208,7 @@ normal:
     } else {
       fputs(s, t1);
     }
+    std::cout << "passed first if" << std::endl << std::flush;
 
     for (i = 0; i < line_length; i++) {
       if (*(int *)&s[i] == 'it/<' && *(int *)&s[i + 4] == '>elt' && 
@@ -212,14 +217,17 @@ normal:
         f = 2; // read line in for of <title>XXX</title>
       }
     }
+    std::cout << "passed first loop" << std::endl << std::flush;
     for (i = 0; i < line_length; i++) {
       if (*(int *)&s[i] == 'oc/<' && *(int *)&s[i + 4] == 'irtn') {
 //        printf("Assign f = 0%s\n", s); // read line with ...<\contributor>
         f = 0;
       }
     }
+    std::cout << "passed second loop" << std::endl << std::flush;
     num_iteration++;
   } while (!feof(sf));
+    std::cout << "ended while loop" << std::endl << std::flush;
 
   fclose(t2);
   fclose(t1);
@@ -340,8 +348,9 @@ int prepr5(char const* argv[])
     FILE *sf, *t1;
     int mi = 0, tf = 0;
 
-    sf = fopen(argv[1], "rb"); // Corrected argv index for file input
-    t1 = fopen(argv[2], "wb"); // Corrected argv index for file output
+    sf = fopen(argv[0], "rb"); // Corrected argv index for file input
+    t1 = fopen(argv[1], "wb"); // Corrected argv index for file output
+    std::cout << "opening files to handle" << std::endl << std::flush;
     if (sf == nullptr || t1 == nullptr) {
         printf("can't open file");
         return 1;
@@ -485,19 +494,27 @@ int phda9_prepr() {
 
   {
     char const* argv[] = {"out7", "out3"};
+    std::cout << "starting prepr3" << std::endl << std::flush;
     prepr3(argv);
+    std::cout << "finished prepr3" << std::endl << std::flush;
   }
   {
     char const* argv[] = {"out3", "out4"};
+    std::cout << "starting prepr4" << std::endl << std::flush;
     prepr4(argv);
+    std::cout << "finished prepr4" << std::endl << std::flush;
   }
   {
     char const* argv[] = {"out4", "out5"};
+    std::cout << "starting prepr5" << std::endl << std::flush;
     prepr5(argv);
+    std::cout << "finished prepr5" << std::endl << std::flush;
   }
   {
     char const* argv[] = {"out5", "tmp2a", "tmp2b"};
+    std::cout << "starting prepr2" << std::endl << std::flush;
     prepr2(argv);
+    std::cout << "finished prepr2" << std::endl << std::flush;
   }
   cat("tmp2a", "tmp2b", "out2");
 
@@ -508,12 +525,16 @@ int phda9_prepr() {
 
   {
     char const* argv[] = {"out9", "tmp1a", "tmp1b"};
+    std::cout << "starting prepr1" << std::endl << std::flush;
     prepr1(argv);
+    std::cout << "finished prepr1" << std::endl << std::flush;
   }
   cat("tmp1a", "tmp1b", "out1");
   {
     char const* argv[] = {"out1", ".main_phda9prepr"};
+    std::cout << "starting prepr6" << std::endl << std::flush;
     prepr6(argv);
+    std::cout << "finished prepr6" << std::endl << std::flush;
   }
 
   return 0;
