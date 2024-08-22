@@ -424,7 +424,7 @@ int prepr6(char const* argv[])
   {\
       char *t, *p = src, *q = dst, *end = p + strlen(src);\
       std::cout << "Processing symbol: " << sym << std::endl; \
-      while ((t = strchr(p, sym)) != NULL) { \
+      while ((t = strchr(p, sym)) != NULL && t < end) { \
           std::cout << "Found symbol '" << sym << "' at position: " << (p - src) << std::endl << std::flush; \
           std::cout << "Current Q " << q - dst << " Length to Add " << t - p << std::endl << std::flush; \
           memcpy(q, p, t - p); q += t - p; \
