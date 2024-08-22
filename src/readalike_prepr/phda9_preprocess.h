@@ -407,40 +407,45 @@ int prepr6(char const* argv[])
 {
   char s[16384], z[16384];
   FILE *sf, *t1;
-  int mi=0;
-  sf = fopen(argv[0],"rb");
-  t1 = fopen(argv[1],"wb");
-//  if ( sf==0 || t1==0 )  printf("can't open file"), exit(1);
+  int mi = 0;
 
-#define PROCESS(sym, src, dst, CONDITION) \
-  {\
-    char *t,  *p = src,  *q = dst,  *end = p + strlen(src);\
-    while ( (t=strchr(p, sym)) != 0) {   \
-        memcpy(q, p, t-p);  q+=t-p;      \
-        int count = 0;                   \
-        while(*t++ == sym)  ++count;     \
-        if ((CONDITION) && (count==1 || count==2))  count = 3-count;\
-        memset(q, sym, count);  q+=count;\
-        p = t-1;\
-    }\
-    memcpy(q, p, end-p);  q[end-p]=0; \
+  sf = fopen(argv[0], "rb");
+  t1 = fopen(argv[1], "wb");
+
+  // Check if files opened successfully
+  if (sf == NULL || t1 == NULL) {
+      perror("Error opening file");
+      return 1; // Exit with error code
   }
 
-  while(1) {
-    fgets(s, 16384, sf);
-    if (feof(sf))  break;
-    PROCESS('{', s, z, 1)
-    PROCESS('}', z, s, 1)
-    PROCESS('[', s, z, 1)
-    PROCESS(']', z, s, 1)
-    PROCESS('&', s, z, 1)
-    fputs(z, t1);
-    ++mi;
+  #define PROCESS(sym, src, dst, CONDITION) \
+  {\
+      char *t, *p = src, *q = dst, *end = p + strlen(src);\
+      while ((t = strchr(p, sym)) != NULL) { \
+          memcpy(q, p, t - p); q += t - p; \
+          int count = 0; \
+          while (*t++ == sym) ++count; \
+          if ((CONDITION) && (count == 1 || count == 2)) count = 3 - count; \
+          memset(q, sym, count); q += count; \
+          p = t - 1; \
+      } \
+      memcpy(q, p, end - p); q[end - p] = '\0'; \
+  }
+
+  while (1) {
+      if (fgets(s, sizeof(s), sf) == NULL) break; // Check for EOF or error
+      PROCESS('{', s, z, 1);
+      PROCESS('}', z, s, 1);
+      PROCESS('[', s, z, 1);
+      PROCESS(']', z, s, 1);
+      PROCESS('&', s, z, 1);
+      fputs(z, t1);
+      ++mi;
   }
 
   fclose(t1);
   fclose(sf);
-  //printf("\n%d lines moved to %s\n", mi, argv[2]);
+  // printf("\n%d lines moved to %s\n", mi, argv[2]);
 
   return 0;
 }
