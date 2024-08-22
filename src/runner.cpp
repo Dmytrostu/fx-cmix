@@ -254,13 +254,13 @@ bool RunCompression(bool enable_preprocess, const std::string &input_path,
                     unsigned long long *output_bytes)
 {
   FILE *data_in = fopen(input_path.c_str(), "rb");
+  std::cout << "Input " << input_path << "passed" << std::endl << std::flush;
   if (!data_in)
     return false;
-  std::cout << "Input " << input_path << "passed" << std::endl << std::flush;
   FILE *temp_out = fopen(temp_path.c_str(), "wb");
+  std::cout << "Temp Out " << temp_out << "passed" << std::endl << std::flush;
   if (!temp_out)
     return false;
-  std::cout << "Temp Out " << temp_out << "passed" << std::endl << std::flush;
 
   fseek(data_in, 0L, SEEK_END);
   *input_bytes = ftell(data_in);
