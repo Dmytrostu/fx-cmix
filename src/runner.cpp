@@ -472,6 +472,10 @@ int main(int argc, char **argv)
   }
   else if (argv[1][1] == 'f')
   {
+    // Compress enwik9
+    input_path = argv[2];
+    output_path = argv[3]; // name of a compressor output
+    
        std::cout << "Uncompressing the dictionary and the file with the new order of articles" << std::endl;
     // unpack a) cmix dictionary, b) new order of articles, c) actual cmix binary
     selfextract_comp();
