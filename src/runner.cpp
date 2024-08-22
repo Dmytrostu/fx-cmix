@@ -381,7 +381,7 @@ bool RunDecompression(const std::string &input_path,
 
 int main(int argc, char **argv)
 {
-  if ((argc != 1) && (argv[1][1] != 'h') && (argc < 4 || argc > 5 || strlen(argv[1]) != 2 || argv[1][0] != '-' || (argv[1][1] != 'c' && argv[1][1] != 'd' && argv[1][1] != 'x' && argv[1][1] != 's' && argv[1][1] != 'n' && argv[1][1] != 'e')))
+  if ((argc != 1) && (argv[1][1] != 'h') && (argc < 4 || argc > 5 || strlen(argv[1]) != 2 || argv[1][0] != '-' || (argv[1][1] != 'c' && argv[1][1] != 'f' && argv[1][1] != 'd' && argv[1][1] != 'x' && argv[1][1] != 's' && argv[1][1] != 'n' && argv[1][1] != 'e')))
   {
     return Help();
   }
