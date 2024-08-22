@@ -359,10 +359,14 @@ int prepr5(char const* argv[])
     while (1) {
         fgets(s, sizeof(s), sf);
         char *p = strstr(s, "<text "), *w;
+        int tf = 1; // Initialize tf here
+
         if (p) {
-            tf = 1;
             p = strchr(p, '>');
-            assert(p);
+            if (!p) {
+                // Handle the error, e.g., continue to the next iteration
+                continue;
+            }
             if (p[-1] == '/') tf = 0;
             ++p;
         } else {
@@ -375,17 +379,20 @@ int prepr5(char const* argv[])
             for (w = p; *p != 0; ++p) {
                 if (*p == '"' || *p == '<' || *p == '>') {
                     // Ensure p is not at the start of the string before checking p[-1]
-                    assert(p > s && p[-1] == '&'); 
-                    --w;
+                    if (p > s && p[-1] == '&') {
+                        --w;
+                    }
                 }
                 *w++ = *p;
             }
-            *w = 0;
+            *w = 0; // Null-terminate the modified string
         }
         fputs(s, t1);
         ++mi;
-        if (feof(sf)) break;
+
+        if (feof(sf)) break; // Check for EOF after processing the line
     }
+
 
     fclose(t1);
     fclose(sf);
