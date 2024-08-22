@@ -425,16 +425,18 @@ int prepr6(char const* argv[])
       char *t, *p = src, *q = dst, *end = p + strlen(src);\
       std::cout << "Processing symbol: " << sym << std::endl; \
       while ((t = strchr(p, sym)) != NULL) { \
-          std::cout << "Found symbol '" << sym << "' at position: " << (p + strlen(src) - end) << std::endl; \
+          std::cout << "Found symbol '" << sym << "' at position: " << (p - src) << std::endl << std::flush; \
           memcpy(q, p, t - p); q += t - p; \
+          std::cout << "passed memcpy " << std::endl << std::flush; \
           int count = 0; \
           while (*t++ == sym) ++count; \
-          std::cout << "Count of consecutive symbols: " << count << std::endl; \
+          std::cout << "passed while " << std::endl << std::flush; \
           if ((CONDITION) && (count == 1 || count == 2)) count = 3 - count; \
           memset(q, sym, count); q += count; \
           p = t - 1; \
       } \
-      memcpy(q, p, end - p); q[end - p] = '\0'; \
+      std::cout << "processed while " << std::endl << std::flush; \
+      memcpy(q, p, end - p); q += end - p; *q = '\0'; \
   }
 
   while (1) {
