@@ -418,13 +418,18 @@ int prepr6(char const* argv[])
       return 1; // Exit with error code
   }
 
+  std::cout << "Files opened successfully." << std::endl;
+
   #define PROCESS(sym, src, dst, CONDITION) \
   {\
       char *t, *p = src, *q = dst, *end = p + strlen(src);\
+      std::cout << "Processing symbol: " << sym << std::endl; \
       while ((t = strchr(p, sym)) != NULL) { \
+          std::cout << "Found symbol '" << sym << "' at position: " << (p + strlen(src) - end) << std::endl; \
           memcpy(q, p, t - p); q += t - p; \
           int count = 0; \
           while (*t++ == sym) ++count; \
+          std::cout << "Count of consecutive symbols: " << count << std::endl; \
           if ((CONDITION) && (count == 1 || count == 2)) count = 3 - count; \
           memset(q, sym, count); q += count; \
           p = t - 1; \
@@ -434,18 +439,20 @@ int prepr6(char const* argv[])
 
   while (1) {
       if (fgets(s, sizeof(s), sf) == NULL) break; // Check for EOF or error
+      std::cout << "Read line: " << s; // Log the read line
       PROCESS('{', s, z, 1);
       PROCESS('}', z, s, 1);
       PROCESS('[', s, z, 1);
       PROCESS(']', z, s, 1);
       PROCESS('&', s, z, 1);
       fputs(z, t1);
+      std::cout << "Processed line: " << z; // Log the processed line
       ++mi;
   }
 
   fclose(t1);
   fclose(sf);
-  // printf("\n%d lines moved to %s\n", mi, argv[2]);
+  std::cout << "\n" << mi << " lines moved to " << argv[1] << std::endl;
 
   return 0;
 }
