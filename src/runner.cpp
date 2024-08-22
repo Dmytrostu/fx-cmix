@@ -256,9 +256,11 @@ bool RunCompression(bool enable_preprocess, const std::string &input_path,
   FILE *data_in = fopen(input_path.c_str(), "rb");
   if (!data_in)
     return false;
+  std::cout << 'Input ' << input_path << "passed" << std::endl << std::flush;
   FILE *temp_out = fopen(temp_path.c_str(), "wb");
   if (!temp_out)
     return false;
+  std::cout << 'Temp Out ' << temp_out << "passed" << std::endl << std::flush;
 
   fseek(data_in, 0L, SEEK_END);
   *input_bytes = ftell(data_in);
@@ -281,10 +283,12 @@ bool RunCompression(bool enable_preprocess, const std::string &input_path,
   std::ifstream temp_in(temp_path, std::ios::in | std::ios::binary);
   if (!temp_in.is_open())
     return false;
+  std::cout << 'Temp In ' << temp_path << "passed" << std::endl << std::flush;
 
   std::ofstream data_out(output_path, std::ios::out | std::ios::binary);
   if (!data_out.is_open())
     return false;
+  std::cout << 'Data Out ' << output_path << "passed" << std::endl << std::flush;
 
   temp_in.seekg(0, std::ios::end);
   unsigned long long temp_bytes = temp_in.tellg();
@@ -475,7 +479,7 @@ int main(int argc, char **argv)
     // Compress enwik9
     input_path = argv[2];
     output_path = argv[3]; // name of a compressor output
-    
+
        std::cout << "Uncompressing the dictionary and the file with the new order of articles" << std::endl;
     // unpack a) cmix dictionary, b) new order of articles, c) actual cmix binary
     selfextract_comp();
