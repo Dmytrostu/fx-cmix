@@ -30,9 +30,7 @@ int prepr1(char const* argv[]) {
   int c, i = 0, mi = 0, lnu = 0, j = 0, f = 0, b1 = 0, lc = 0;
   sf = fopen(argv[0], "rb");
   t1 = fopen(argv[1], "wb");
-  std::cout << "opening argv[1]" << std::endl << std::flush;
   t2 = fopen(argv[2], "wb");
-  std::cout << "opening argv[2]" << std::endl << std::flush;
 //  if (sf == 0 || t1 == 0 || t2 == 0) {
 //    printf("can't open file"), exit(1);
 //  }
@@ -126,9 +124,7 @@ int prepr2(char const *argv[]) {
   int i, line_length, f = 0, lastID = 0;
   sf = fopen(argv[0], "rb");
   t1 = fopen(argv[1], "wb");
-  std::cout << "opening argv[1]" << std::endl << std::flush;
   t2 = fopen(argv[2], "wb");
-  std::cout << "opening argv[2]" << std::endl << std::flush;
 //  if (sf == 0 || t1 == 0 || t2 == 0) {
 //    printf("can't open file"), exit(1);
 //  }
@@ -208,7 +204,6 @@ normal:
     } else {
       fputs(s, t1);
     }
-    std::cout << "passed first if" << std::endl << std::flush;
 
     for (i = 0; i < line_length; i++) {
       if (*(int *)&s[i] == 'it/<' && *(int *)&s[i + 4] == '>elt' && 
@@ -217,17 +212,14 @@ normal:
         f = 2; // read line in for of <title>XXX</title>
       }
     }
-    std::cout << "passed first loop" << std::endl << std::flush;
     for (i = 0; i < line_length; i++) {
       if (*(int *)&s[i] == 'oc/<' && *(int *)&s[i + 4] == 'irtn') {
 //        printf("Assign f = 0%s\n", s); // read line with ...<\contributor>
         f = 0;
       }
     }
-    std::cout << "passed second loop" << std::endl << std::flush;
     num_iteration++;
   } while (!feof(sf));
-    std::cout << "ended while loop" << std::endl << std::flush;
 
   fclose(t2);
   fclose(t1);
@@ -350,7 +342,6 @@ int prepr5(char const* argv[])
 
     sf = fopen(argv[0], "rb"); // Corrected argv index for file input
     t1 = fopen(argv[1], "wb"); // Corrected argv index for file output
-    std::cout << "opening files to handle" << std::endl << std::flush;
     if (sf == nullptr || t1 == nullptr) {
         printf("can't open file");
         return 1;
@@ -418,38 +409,29 @@ int prepr6(char const* argv[])
       return 1; // Exit with error code
   }
 
-  std::cout << "Files opened successfully." << std::endl;
 
   #define PROCESS(sym, src, dst, CONDITION) \
   {\
       char *t, *p = src, *q = dst, *end = p + strlen(src);\
-      std::cout << "Processing symbol: " << sym << std::endl; \
-      while ((t = strchr(p, sym)) != NULL && t < end) { \
-          std::cout << "Found symbol '" << sym << "' at position: " << (p - src) << std::endl << std::flush; \
-          std::cout << "Current Q " << q - dst << " Length to Add " << t - p << std::endl << std::flush; \
+      while (p < end && t < end && (t = strchr(p, sym)) != NULL) { \
           memcpy(q, p, t - p); q += t - p; \
-          std::cout << "passed memcpy " << std::endl << std::flush; \
           int count = 0; \
           while (*t++ == sym) ++count; \
-          std::cout << "passed while " << std::endl << std::flush; \
           if ((CONDITION) && (count == 1 || count == 2)) count = 3 - count; \
           memset(q, sym, count); q += count; \
           p = t - 1; \
       } \
-      std::cout << "processed while " << std::endl << std::flush; \
       memcpy(q, p, end - p); q += end - p; *q = '\0'; \
   }
 
   while (1) {
       if (fgets(s, sizeof(s), sf) == NULL) break; // Check for EOF or error
-      std::cout << "Read line: " << s; // Log the read line
       PROCESS('{', s, z, 1);
       PROCESS('}', z, s, 1);
       PROCESS('[', s, z, 1);
       PROCESS(']', z, s, 1);
       PROCESS('&', s, z, 1);
       fputs(z, t1);
-      std::cout << "Processed line: " << z; // Log the processed line
       ++mi;
   }
 

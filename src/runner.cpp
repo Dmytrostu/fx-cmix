@@ -34,6 +34,7 @@ int Help()
   printf("    to compress enwik9: cmix -e enwik9 [output]\n");
   printf("    to create a header for hutter prize: cmix -h comp_dict_size comp_new_order_size decomp_input_size\n");
   printf("    with dictionary:    cmix -c [dictionary] [input] [output]\n");
+  printf("    with reorder + transform:    cmix -f [input] [output]\n");
   printf("    without dictionary: cmix -c [input] [output]\n");
   printf("    no preprocessing:   cmix -n [input] [output]\n");
   printf("    only preprocessing: cmix -s [dictionary] [input] [output]\n");
@@ -463,6 +464,32 @@ int main(int argc, char **argv)
   }
   else if (argv[1][1] == 'c' || argv[1][1] == 'n')
   {
+    if (!RunCompression(enable_preprocess, input_path, temp_path, output_path,
+                        dictionary, &input_bytes, &output_bytes))
+    {
+      return Help();
+    }
+  }
+  else if (argv[1][1] == 'f')
+  {
+       std::cout << "Uncompressing the dictionary and the file with the new order of articles" << std::endl;
+    // unpack a) cmix dictionary, b) new order of articles, c) actual cmix binary
+    selfextract_comp();
+
+       std::cout << "Preparing enwik9 for reordering" << std::endl;
+    split4Comp(input_path.c_str());
+
+    // change the order of articles in the input
+       std::cout << "Reordering enwik9 articles" << std::endl;
+    reorder();
+
+    // remove all tags from enwik9
+       std::cout << "Transforming enwik9 tags" << std::endl;
+    transform();
+
+    std::cout << "Cmix compression..." << std::endl;
+    input_path = ".main_ordered";
+    dictionary = fopen(".dict", "rb");
     if (!RunCompression(enable_preprocess, input_path, temp_path, output_path,
                         dictionary, &input_bytes, &output_bytes))
     {
