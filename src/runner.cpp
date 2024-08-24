@@ -492,8 +492,8 @@ int main(int argc, char **argv)
     reorder();
 
     // remove all tags from enwik9
-       std::cout << "Transforming enwik9 tags" << std::endl;
-    transform();
+    //    std::cout << "Transforming enwik9 tags" << std::endl;
+    // transform();
 
     std::cout << "Cmix compression..." << std::endl;
     input_path = ".main_ordered";
