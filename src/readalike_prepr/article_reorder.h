@@ -174,7 +174,7 @@ int reorder() {
     }
 
     out_file.close();
-    std::cout << "Finished writing to " << ".main_ordered" << std::endl << std::flush;
+    std::cout << "Finished writing to " << ".main_reordered" << std::endl << std::flush;
     return 0;
 }
 

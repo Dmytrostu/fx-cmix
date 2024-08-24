@@ -254,7 +254,7 @@ bool RunCompression(bool enable_preprocess, const std::string &input_path,
                     unsigned long long *output_bytes)
 {
   FILE *data_in = fopen(input_path.c_str(), "rb");
-  std::cout << "Input " << input_path << " passed " << input_path.c_str() << data_in << std::endl << std::flush;
+  std::cout << "Input " << input_path << " passed " << input_path.c_str() << std::endl << std::flush;
   if (!data_in)
     return false;
   FILE *temp_out = fopen(temp_path.c_str(), "wb");
@@ -493,10 +493,10 @@ int main(int argc, char **argv)
 
     // remove all tags from enwik9
     //    std::cout << "Transforming enwik9 tags" << std::endl;
-    // transform();
+    transform();
 
     std::cout << "Cmix compression..." << std::endl;
-    input_path = ".main_ordered";
+    input_path = ".main_reordered";
     dictionary = fopen(".dict", "rb");
     if (!RunCompression(enable_preprocess, input_path, temp_path, output_path,
                         dictionary, &input_bytes, &output_bytes))
