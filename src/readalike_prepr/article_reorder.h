@@ -313,9 +313,9 @@ int transform() {
         size_t pos = 0;
         while ((pos = content.find(old, pos)) != std::string::npos) {
             content.replace(pos, old.length(), new_str);
-            // std::cout << "Replaced " << old << " with " << new_str << std::endl;
             pos += new_str.length();
         }
+        std::cout << "Replaced " << old << " with " << new_str << std::endl;
     }
 
     // Open the binary file for writing
