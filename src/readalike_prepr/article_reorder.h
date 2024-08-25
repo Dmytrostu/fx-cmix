@@ -293,8 +293,6 @@ int transform() {
         {"</title>", ""},
         {"<id>", ""},
         {"</id>", ""},
-        {"<ip>", ""},
-        {"</ip>", ""},
         {"<revision>", ""},
         {"</revision>", ""},
         {"<timestamp>", ""},
@@ -330,6 +328,14 @@ int transform() {
     }
     oss.write(&content[prev_pos], pos - prev_pos); // Write any remaining content
     content = oss.str(); // Move the result back into the original string
+    
+    // Open the binary file for writing
+    std::ofstream output_file(".main_reordered", std::ios::binary);
+    if (!output_file) {
+        std::cout << "Unable to open output file" << std::endl;
+        return -1;
+    }
+
     output_file.write(content.c_str(), content.size());
     output_file.close();
     std::cout << "Transformed File written" << std::endl;
