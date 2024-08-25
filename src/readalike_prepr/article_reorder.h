@@ -309,21 +309,27 @@ int transform() {
 
     // Perform the replacements
     std::string content(buffer.begin(), buffer.end());
-    for (const auto& [old, new_str] : replacements) {
-        size_t pos = 0;
-        while ((pos = content.find(old, pos)) != std::string::npos) {
-            content.replace(pos, old.length(), new_str);
-            pos += new_str.length();
+    std::ostringstream oss;
+    size_t pos = 0;
+    size_t prev_pos = 0;
+    while (pos < content.size()) {
+        bool found = false;
+        for (const auto &pair : replacements) {
+            if (content.compare(pos, pair.first.size(), pair.first) == 0) {
+                oss.write(&content[prev_pos], pos - prev_pos); // Write the content up to the found tag
+                oss << pair.second; // Write the replacement
+                pos += pair.first.size();
+                prev_pos = pos;
+                found = true;
+                break;
+            }
         }
-        std::cout << "Replaced " << old << " with " << new_str << std::endl;
+        if (!found) {
+            ++pos;
+        }
     }
-
-    // Open the binary file for writing
-    std::ofstream output_file(".main_reordered", std::ios::binary);
-    if (!output_file) {
-        std::cout << "Unable to open output file" << std::endl;
-        return -1;
-    }
+    oss.write(&content[prev_pos], pos - prev_pos); // Write any remaining content
+    content = oss.str(); // Move the result back into the original string
     output_file.write(content.c_str(), content.size());
     output_file.close();
     std::cout << "Transformed File written" << std::endl;
