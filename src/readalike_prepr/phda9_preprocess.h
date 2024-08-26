@@ -415,25 +415,19 @@ int prepr6(char const* argv[])
   {\
       std::cout << "Processing symbol: " << sym << std::endl; \
       char *t = NULL, *p = src, *q = dst, *end = p + strlen(src);\
-      std::cout << "Initial src: " << src << std::endl; \
-      std::cout << "Initial dst: " << dst << std::endl; \
       std::cout << "src length: " << strlen(src) << std::endl; \
       while (p < end && (t = strchr(p, sym)) != NULL) { \
-          std::cout << "Found symbol at position: " << (t - src) << std::endl; \
           memcpy(q, p, t - p); \
           q += t - p; \
-          std::cout << "Copied part: " << std::string(p, t - p) << std::endl; \
           int count = 0; \
           while (*t == sym) { \
               ++count; \
               ++t; \
           } \
-          std::cout << "Symbol count: " << count << std::endl; \
           if ((CONDITION) && (count == 1 || count == 2)) \
               count = 3 - count; \
           memset(q, sym, count); \
           q += count; \
-          std::cout << "After memset: " << dst << std::endl; \
           p = t; \
       } \
       memcpy(q, p, end - p); \
@@ -444,11 +438,10 @@ int prepr6(char const* argv[])
 
   while (1) {
       std::cout << "Reading line " << mi + 1 << std::endl;
-      if (fgets(s, sizeof(s)-1, sf) == NULL) {
+      if (fgets(s, sizeof(s), sf) == NULL) {
           std::cout << "End of file or error while reading." << std::endl;
           break; // Check for EOF or error
       }
-      std::cout << "Line read: " << s << std::endl;
 
       PROCESS('{', s, z, 1);
       PROCESS('}', z, s, 1);
@@ -456,16 +449,16 @@ int prepr6(char const* argv[])
       PROCESS(']', z, s, 1);
       PROCESS('&', s, z, 1);
 
-      std::cout << "Writing processed line to file: " << z << std::endl;
       fputs(z, t1);
       ++mi;
   }
 
+  std::cout << "\n" << mi << " lines moved to " << argv[1] << std::endl;
   std::cout << "Closing files." << std::endl;
+
   fclose(t1);
   fclose(sf);
 
-  std::cout << "\n" << mi << " lines moved to " << argv[1] << std::endl;
   return 0;
 }
 
