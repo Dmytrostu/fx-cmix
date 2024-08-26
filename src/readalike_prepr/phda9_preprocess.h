@@ -348,7 +348,7 @@ int prepr5(char const* argv[])
     }
 
     while (1) {
-        fgets(s, sizeof(s)-1, sf);
+        fgets(s, sizeof(s), sf);
         char *p = strstr(s, "<text "), *w;
         int tf = 1; // Initialize tf here
 
@@ -433,7 +433,7 @@ int prepr6(char const* argv[])
   }
 
   while (1) {
-      if (fgets(s, sizeof(s), sf) == NULL) break; // Check for EOF or error
+      if (fgets(s, sizeof(s)-1, sf) == NULL) break; // Check for EOF or error
       PROCESS('{', s, z, 1);
       PROCESS('}', z, s, 1);
       PROCESS('[', s, z, 1);
