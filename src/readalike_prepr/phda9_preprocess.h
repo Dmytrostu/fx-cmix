@@ -400,7 +400,9 @@ int prepr6(char const* argv[])
   FILE *sf, *t1;
   int mi = 0;
 
+    std::cout << "Opening source file: " << argv[0] << std::endl;
   sf = fopen(argv[0], "rb");
+    std::cout << "Opening destination file: " << argv[1] << std::endl;
   t1 = fopen(argv[1], "wb");
 
   // Check if files opened successfully
@@ -409,44 +411,61 @@ int prepr6(char const* argv[])
       return 1; // Exit with error code
   }
 
-
   #define PROCESS(sym, src, dst, CONDITION) \
   {\
+      std::cout << "Processing symbol: " << sym << std::endl; \
       char *t = NULL, *p = src, *q = dst, *end = p + strlen(src);\
+      std::cout << "Initial src: " << src << std::endl; \
+      std::cout << "Initial dst: " << dst << std::endl; \
+      std::cout << "src length: " << strlen(src) << std::endl; \
       while (p < end && (t = strchr(p, sym)) != NULL) { \
+          std::cout << "Found symbol at position: " << (t - src) << std::endl; \
           memcpy(q, p, t - p); \
           q += t - p; \
+          std::cout << "Copied part: " << std::string(p, t - p) << std::endl; \
           int count = 0; \
           while (*t == sym) { \
               ++count; \
               ++t; \
           } \
+          std::cout << "Symbol count: " << count << std::endl; \
           if ((CONDITION) && (count == 1 || count == 2)) \
               count = 3 - count; \
           memset(q, sym, count); \
           q += count; \
+          std::cout << "After memset: " << dst << std::endl; \
           p = t; \
       } \
       memcpy(q, p, end - p); \
       q += end - p; \
       *q = '\0'; \
+      std::cout << "Final dst after PROCESS: " << dst << std::endl; \
   }
 
   while (1) {
-      if (fgets(s, sizeof(s)-1, sf) == NULL) break; // Check for EOF or error
+      std::cout << "Reading line " << mi + 1 << std::endl;
+      if (fgets(s, sizeof(s)-1, sf) == NULL) {
+          std::cout << "End of file or error while reading." << std::endl;
+          break; // Check for EOF or error
+      }
+      std::cout << "Line read: " << s << std::endl;
+
       PROCESS('{', s, z, 1);
       PROCESS('}', z, s, 1);
       PROCESS('[', s, z, 1);
       PROCESS(']', z, s, 1);
       PROCESS('&', s, z, 1);
+
+      std::cout << "Writing processed line to file: " << z << std::endl;
       fputs(z, t1);
       ++mi;
   }
 
+  std::cout << "Closing files." << std::endl;
   fclose(t1);
   fclose(sf);
-  std::cout << "\n" << mi << " lines moved to " << argv[1] << std::endl;
 
+  std::cout << "\n" << mi << " lines moved to " << argv[1] << std::endl;
   return 0;
 }
 
