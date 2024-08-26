@@ -412,16 +412,24 @@ int prepr6(char const* argv[])
 
   #define PROCESS(sym, src, dst, CONDITION) \
   {\
-      char *t, *p = src, *q = dst, *end = p + strlen(src);\
-      while (p < end && t < end && (t = strchr(p, sym)) != NULL) { \
-          memcpy(q, p, t - p); q += t - p; \
+      char *t = NULL, *p = src, *q = dst, *end = p + strlen(src);\
+      while (p < end && (t = strchr(p, sym)) != NULL) { \
+          memcpy(q, p, t - p); \
+          q += t - p; \
           int count = 0; \
-          while (*t++ == sym) ++count; \
-          if ((CONDITION) && (count == 1 || count == 2)) count = 3 - count; \
-          memset(q, sym, count); q += count; \
-          p = t - 1; \
+          while (*t == sym) { \
+              ++count; \
+              ++t; \
+          } \
+          if ((CONDITION) && (count == 1 || count == 2)) \
+              count = 3 - count; \
+          memset(q, sym, count); \
+          q += count; \
+          p = t; \
       } \
-      memcpy(q, p, end - p); q += end - p; *q = '\0'; \
+      memcpy(q, p, end - p); \
+      q += end - p; \
+      *q = '\0'; \
   }
 
   while (1) {
