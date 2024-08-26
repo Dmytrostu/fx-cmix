@@ -348,7 +348,7 @@ int prepr5(char const* argv[])
     }
 
     while (1) {
-        fgets(s, sizeof(s), sf);
+        fgets(s, sizeof(s)-1, sf);
         char *p = strstr(s, "<text "), *w;
         int tf = 1; // Initialize tf here
 
